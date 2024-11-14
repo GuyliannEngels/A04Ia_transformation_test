@@ -1,0 +1,131 @@
+---
+title: "Diabète chez les Indiens Pimas"
+author: "___"
+date: "`r Sys.Date()`"
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+editor: visual
+lang: fr
+---
+
+```{r setup, include=FALSE}
+# Ceci est nécessaire pour les tests SDD, ne pas utiliser dans un "vrai" projet
+if (!"tools:tests" %in% search())
+  source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
+
+# Configure SciViews::R environment
+SciViews::R(lang = "fr")
+```
+
+# Introduction
+
+La prévalence de diabète de type 2 est particulièrement élevée chez les Indiens Pimas en Arizona. Nous allons ici explorer et décrire des données relatives à cette population d'Amérindiens.
+
+# Analyses
+
+<!--% Importez les données Pima.tr2 et Pima.te provenant toutes les deux du package {MASS}. Les deux tableaux sont combiné à l'aide de la fonction `sbind_rows()`. -->
+
+```{r pimport, record='RODFS', object='pima'}
+pima <- sbind_rows(
+  read(___), 
+  read(___))
+
+# La suite est complétée pour vous
+# Renommer variable
+pima <- srename(pima, n_pregnant = npreg, glucose = glu, diastolic = bp,
+  triceps = skin, dpf = ped, diabete = type)
+
+# Remplacer Yes/No en oui/non pour diabete
+pima <- smutate(pima,
+  diabete = factor(ifelse(diabete == "Yes", "oui", "non")))
+
+# Labels et unités
+pima <- labelise(pima,
+  label = list(
+    n_pregnant = "Nombre de grossesses",
+    glucose    = "Glucose sanguin",
+    diastolic  = "Pression diastolique",
+    triceps    = "Pli cutané au triceps",
+    bmi        = "Indice de masse corporelle",
+    dpf        = "Risque génétique",
+    diabete    = "Diabète",
+    age        = "Age"
+  ),
+  units = c(
+    glucose    = "mg/dL",
+    diastolic  = "mmHg",
+    triceps    = "mm",
+    bmi        = "kg/m^2",
+    age        = "Années"
+  )
+)
+```
+
+<!--% Utilisez la fonction `skim()` du package {skimr} pour explorer les données. -->
+
+```{r pskim}
+___
+```
+
+```{r pskimcomment, output='asis'}
+select_answer(r"-{
+[] - Ce tableau comprend une variable quantitative ordonnée et sept variables qualitatives.
+[] - Ce tableau comprend une variable quantitative non ordonnée et sept variables qualitatives.
+[] - Ce tableau comprend une variable qualitative non ordonnée et sept variables quantitatives.
+[] - Ce tableau comprend une variable qualitative ordonnée et sept variables quantitatives.
+[] -  Il n'y a aucune donnée manquante.
+[] -   Il y a plusieurs valeurs manquantes dans ce jeu de données. La variable qui contient le plus grand nombre de valeurs manquantes est la variable `diabete`.
+[] -   Il y a plusieurs valeurs manquantes dans ce jeu de données. La variable qui contient le plus grand nombre de valeurs manquante est la variable `triceps`.
+[] -  La variable `n_pregnant` est reconnue dans R comme une variable **integer**. Cette variable doit être convertie en **double**.
+[] -  La variable `n_pregnant` est reconnue dans R comme une variable **integer**. Le nombre d'enfant ne peut prendre que des valeurs entières.}-")
+```
+
+<!-- Définissez une nouvelle colonne `bmi_cat` dans le tableau `pima` avec la division en classe de la variable `bmi` avec les niveaux suivants : "sous-poids" strictement inférieur à 18.5, "poids normal" de 18.5 à 25 (non inclus), "surpoids" de 25 à 30 (non inclus), et "obèse" au-dessus de 30 (compris). Par exemple, une personne à IMC 25 est donc en surpoids. Cette nouvelle variable doit être de type facteur ordonné. -->
+
+<!--# Un addin existe dans RStudio pour vous aider à faire ces catégories. -->
+
+```{r pbmi_cat, record='RODFS', object='pima'}
+___
+```
+
+<!--% Réalisez un graphique qui permet de dénombrer les quatre niveaux de la variable `bmi_cat` avec des aplats de couleurs pour différencier les personnes diabétiques ou non. Éliminez les valeurs manquantes pour la variable `bmi_cat` uniquement. Assurez-vous que le label en X soit "Catégorie d'IMC" et que le label en Y soit "Effectifs". -->
+
+```{r pcount, record='RNSTR', arg='labels,layers'}
+___
+```
+
+```{r pcountcomment, output='asis'}
+select_answer(r"-{
+[] -  Les individus les plus représentés sont les obèses.
+[] -  Les individus les plus représentés sont en sous-poids.
+[] -  Les individus sont répartis de manière égale entre les quatre catégories d'IMC.
+[] -  On dénombre deux fois plus d’Indiennes Pima en surpoids qu'en poids normal.
+[] -  On dénombre deux fois plus d’indiennes Pima de poids normaux qu’en surpoids.
+[] - La proportion de diabétiques dans chaque catégorie d'IMC est stable.
+[] - La proportion de diabétiques augmente dans les catégories d'IMC du sous-poids vers l'obésité.
+[] - La proportion de diabétiques diminue dans les catégories d'IMC du sous-poids vers l'obésité.}-")
+```
+
+<!-- Éliminez les individus en sous-poids et normaux selon l'IMC. Nommez votre nouveau tableau `pima_sub`. Éliminez également les niveaux inutiles de la variable `bmi_cat`. -->
+
+```{r psub, record='RODFS', object='pima_sub'}
+___
+```
+
+<!--% Réalisez un tableau résumé des valeurs médianes des variables `glucose`, `diastolic` et `dpf`. Groupez vos individus par catégorie de `bmi` et de `diabete`. Ajoutez en plus le nombre d'observations par groupe. Ce tableau doit donc contenir les variables `bmi_cat`, `diabete`, `glucose`, `diastolic`, `dpf` et `n`. Assignez votre résultat à `pima_tab`. Enfin, formatez le tableau avec `tabularise()`. -->
+
+```{r ptab, record='RODFS', object='pima_tab'}
+pima_sub %>.%
+  ___ ->
+  pima_tab
+tabularise(pima_tab, auto.labs = ___)
+```
+
+<!--% Interprétez le tableau : proposez deux éléments d'interprétation sous la forme d'une liste. -->
+
+-   ...
+
+-   ...

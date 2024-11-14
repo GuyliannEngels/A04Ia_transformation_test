@@ -1,0 +1,140 @@
+---
+title: "Croissance de coraux en mésocosme"
+author: "___"
+date: "`r Sys.Date()`"
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+editor: visual
+lang: fr
+---
+
+```{r setup, include=FALSE}
+# Ceci est nécessaire pour les tests SDD, ne pas utiliser dans un "vrai" projet
+if (!"tools:tests" %in% search())
+  source(here::here("tests/tools_tests.R"), attach(NULL, name = "tools:tests"))
+
+# Configure SciViews::R environment
+SciViews::R(lang = "fr")
+```
+
+# Introduction
+
+Les mésocosmes sont des récifs artificiels qui permettent d'étudier entre autres les coraux dans des conditions contrôlées. La croissance de deux espèces de coraux est étudiée.
+
+# Analyses
+
+<!--% Complétez les instructions ci-dessous pour importez les données depuis le lien fourni dans le README.md. -->
+
+```{r cimport, record='RODFS', object='coral'}
+# Création du dossier data/cache/
+fs::dir_create("data/cache")
+# Importation des données
+coral <- read$csv("___",
+  cache_file = "data/cache/corals.csv")
+```
+
+<!--# Notez que l'argument `cache_file=` permet de sauver localement le jeu de données dans le dossier data/cache/. Lors des prochaines utilisations de la fonction read(), le tableau sera chargé depuis la version locale. -->
+
+<!--% Explorez les variables de votre jeu de données avec la fonction `skim()` du package {skimr}. -->
+
+```{r cskim}
+___
+```
+
+```{r cskimcomment, output='asis'}
+select_answer(r"-{
+[] -  Il n'y a aucune donnée manquante.
+[] -   Il y a plusieurs valeurs manquantes dans ce jeu de données.
+[] -   Les variables quantitatives temperature, gain, gain_std ont des distributions unimodales.
+[] -   Les variables quantitatives temperature, gain, gain_std ont des distributions bimodales.
+[] -   Les variables quantitatives temperature, gain, gain_std ont des distributions multimodales.
+[] - La variable id est reconnue automatiquement comme une variable caractère.
+[] - La variable id est reconnue automatiquement comme une variable facteur.
+[] - La variable id est reconnue automatiquement comme une variable numérique.
+[] - Les variables salinity et temperature ne comprennent qu’une seule valeur pour chaque variable.
+[] - Les variables salinity et temperature comprennent une multitude de valeurs pour chaque variable.
+[] - La variable salinity ne comprend qu’une seule valeur alors que la variable température en comprend plusieurs.
+[] - La variable temperature ne comprend qu’une seule valeur alors que la variable salinity en comprend plusieurs.
+[] - Les variables localisation et species sont reconnues automatiquement comme des variables caractères. Il faut les convertir en variable facteur.
+[] - Les variables localisation et species sont reconnues automatiquement comme des variables facteurs.
+[] -  Après un premier téléchargement du tableau de données, les données seront chargées à partir de data/cache/corals.csv.
+[] -  À chaque exécution de l'instruction read(), les données sont téléchargées depuis internet et sauvées localement dans le dossier data/cache/.
+[] - Pour accéder à la page d'aide associée à ces données, j'utilise l'instruction ?coral 
+[] - Il n'y a pas de page d'aide associée à ces données.}-")
+```
+
+<!--% Transformez les variables `localisation`, `species` et `id` en variables facteurs et assignez le résultat à `coral`.  Affichez ensuite les niveaux pour chacune des trois variables. -->
+
+```{r cfact, record='RODFS', object='coral'}
+___
+
+___
+___
+___
+```
+
+```{r cfactcomment, output='asis'}
+select_answer(r"-{
+[] -  La variable localisation a 2 niveaux (s.hystrix et s.pistillata).
+[] -  La variable localisation a 4 niveaux (A0, A2, B0 et B2).
+[] -  La variable localisation a 40 niveaux, chaque valeur est unique.
+[] -  La variable species a 2 niveaux (s.hystrix et s.pistillata).
+[] -  La variable species a 4 niveaux (A0, A2, B0 et B2).
+[] -  La variable species a 40 niveaux, chaque valeur est unique.
+[] -  La variable id a 2 niveaux (s.hystrix et s.pistillata).
+[] -  La variable id a 4 niveaux (A0, A2, B0 et B2).
+[] -  La variable id a 40 niveaux, chaque valeur est unique.
+}-")
+```
+
+<!-- Réalisez un tableau résumé du nombre d'individus par espèce et par aquarium. Ce tableau doit comprendre les colonne `species`, `localisation` et `n`. Assignez votre résultat à `coral_count`. Formatez votre résultat avec la fonction tabularise(). -->
+
+La répartition des espèces par aquariums est présentée dans le tableau ci-dessous.
+
+```{r ccount, record='RODFS', object='coral_count'}
+coral %>.%
+  ___ -> coral_count
+___(coral_count)
+```
+
+<!--% Calculez les variables suivantes en une seule étape et ajoutez-les à `coral`. 1) Divisez le gain par le nombre de jours d'expérience, en g/j dans `gain_j`. 2) Divisez le gain standardisé par le nombre de jours et multipliez cette nouvelle variable par 100 pour obtenir la croissance en %/j dans `gain_std_j`. Terminez par afficher un histogramme du gain de masse par jour. Utilisez des labels adéquats pour les axes du graphique.  -->
+
+```{r cgain, record='RODFS', object='coral'}
+# Calcul
+coral <- ___
+# Histogramme
+chart(___) +
+  ___() +
+  ___(___)
+```
+
+L'histogramme ci-dessus nous indique qu'au moins un individu à une perte de masse au cours du temps. On peut supposer que lors de la pesée une partie de l'organisme a été cassé.
+
+<!-- Éliminez les individus ayant des valeurs de `gain_j` strictement inférieur à 0. Éliminez également les colonnes inutiles comme `temperature`, `date` et `time`. Assignez votre résultat à coral. -->
+
+```{r cclean, record='RODFS', object='coral'}
+coral %>.%
+  ___ ->
+  coral
+```
+
+<!--% Réalisez un  tableau résumant les données par aquarium et par espèce. Ce tableau doit contenir la valeur minimale, la moyenne, la médiane, la valeur maximale et le nombre d'observations pour la variable gain_std_j. Nommez les colonnes `minimum`, `moyenne`, `médiane`, `maximum` et `n`. Assignez vos résultats à coral_tab. Formatez votre tableau à l'aide de tabularise().-->
+
+```{r ctab, record='RODFS', object='coral_tab'}
+coral %>.%
+  ___ -> 
+  coral_tab
+___
+```
+
+```{r ctabcomment, output='asis'}
+select_answer(r"-{
+[] -  *Seriatopora hystrix* a des valeurs médianes de croissance plus élevée que *Stylophora pistillata* dans tous les aquariums.
+[] -  *Seriatopora hystrix* a des valeurs médianes de croissance plus faibles que *Stylophora pistillata* dans tous les aquariums.
+[] -  Les individus éliminés sont tous de l’espèce *Seriatopora hystrix*. 
+[] -  Les individus éliminés sont tous de l’espèce *Stylophora pistillata*. 
+[] - les individus sont répartis dans les deux espèces.}-")
+```
